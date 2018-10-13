@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:trust_me/ui/Drawer.dart';
-
+import 'package:trust_me/util/AccountHandle.dart';
+import 'package:trust_me/ui/Sign.dart';
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -14,9 +16,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: getDrawer(),
+//      drawer: getDrawer(),
       appBar: AppBar(
-        title: Text("Register"),
+        title: Text("Login"),
       ),
       body: Container(
         child: ListView(
@@ -24,10 +26,11 @@ class _LoginState extends State<Login> {
             Padding(padding: EdgeInsets.all(20.0)),
             // Login text
             Center(
-              child: Text(
-                'Login',
-                style: TextStyle(fontSize: 50.0),
-              ),
+//              child: Text(
+//                'Login',
+//                style: TextStyle(fontSize: 50.0),
+//              ),
+            child: Image.asset('assets/face.png'),
             ),
             Padding(padding: EdgeInsets.all(10.0)),
             // Username text box
@@ -62,7 +65,7 @@ class _LoginState extends State<Login> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FlatButton(
+                RaisedButton(
                     onPressed: loginAccount,
                     child: Text(
                       'Login',
@@ -70,7 +73,7 @@ class _LoginState extends State<Login> {
                           fontSize: 20.0, fontWeight: FontWeight.w500),
                     )),
                 Padding(padding: EdgeInsets.all(50.0)),
-                FlatButton(
+                RaisedButton(
                     onPressed: createAccount,
                     child: Text(
                       'Register',
@@ -88,27 +91,59 @@ class _LoginState extends State<Login> {
   createAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      debugPrint('sending ${_userNameController.text} ${_passwordController.text}');
       var url = "http://la6.scottz.net:3000/users";
-      http.post(url, headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: {"mail": _userNameController.text, "passwd": _passwordController.text}).then(
-              (response) {
-            print("Response status: ${response.statusCode}");
-            // TODO: Parse response body
-            print("Response body: ${response.body}");
-          });
+      http.post(url, headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }, body: {
+        "mail": _userNameController.text,
+        "passwd": _passwordController.text
+      }).then((response) {
+        if (response.statusCode == 201) {
+          Map userMap = json.decode(response.body);
+          debugPrint(userMap.toString());
+          if (userMap['auth']) {
+            debugPrint('Registered');
+            updateToken(userMap['token']);
+            updateAuth(true);
+          } else {
+            print('Registration failed. $userMap');
+          }
+        } else {
+          // TODO: Print this on screen
+          debugPrint(
+              "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
+        }
+      });
     }
   }
+
   loginAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      debugPrint('sending ${_userNameController.text} ${_passwordController.text}');
       var url = "http://la6.scottz.net:3000/loginUser";
-      http.post(url, headers: {"Content-Type": "application/x-www-form-urlencoded"}, body: {"mail": _userNameController.text, "passwd": _passwordController.text}).then(
-              (response) {
-            print("Response status: ${response.statusCode}");
-            // TODO: Parse response body
-            print("Response body: ${response.body}");
-          });
+      http.post(url, headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }, body: {
+        "mail": _userNameController.text,
+        "passwd": _passwordController.text
+      }).then((response) {
+        if (response.statusCode == 201) {
+          Map userMap = json.decode(response.body);
+          debugPrint(userMap.toString());
+          if (userMap['auth']) {
+            debugPrint('Authenticated');
+            updateToken(userMap['token']);
+            updateAuth(true);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => Sign()));
+          } else {
+            print('Authentication failed. $userMap');
+          }
+        } else {
+          // TODO: Print this on screen
+          debugPrint(
+              "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
+        }
+      });
     }
   }
 }
