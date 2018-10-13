@@ -143,6 +143,7 @@ class _LoginState extends State<Login> {
           // TODO: Print this on screen
           debugPrint(
               "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
+          Scaffold.of(context).showSnackBar(SnackBar(content: Text('hi')));
         }
       });
     }

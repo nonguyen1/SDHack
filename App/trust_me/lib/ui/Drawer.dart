@@ -3,7 +3,7 @@ import 'package:trust_me/util/AccountHandle.dart';
 import 'package:trust_me/ui/Sign.dart';
 import 'package:trust_me/ui/Friends.dart';
 import 'package:trust_me/ui/Agreements.dart';
-
+import 'package:trust_me/ui/WebSign.dart';
 
 getDrawer(currentBuildContext) => new Drawer(
         child: ListView(
@@ -25,6 +25,10 @@ getDrawer(currentBuildContext) => new Drawer(
         ListTile(
           title: Row(children: <Widget>[Icon(Icons.check),Padding(padding: EdgeInsets.all(10.0)),Text("Agreements")]),
           onTap: () => Navigator.pushReplacement(currentBuildContext, MaterialPageRoute(builder: (context) => Agreements())),
+        ),
+        ListTile(
+          title: Row(children: <Widget>[Icon(Icons.web_asset),Padding(padding: EdgeInsets.all(10.0)),Text("WebSign")]),
+          onTap: () => Navigator.pushReplacement(currentBuildContext, MaterialPageRoute(builder: (context) => WebSign())),
         ),
       ],
     ));
