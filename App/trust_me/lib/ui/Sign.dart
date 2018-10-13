@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'Drawer.dart';
 
 class Sign extends StatefulWidget {
   @override
@@ -10,8 +11,9 @@ class _SignState extends State<Sign> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: Text("Sign")),
+        drawer: getDrawer(context),
         body: ListView(
-          children: <Widget>[Text("Test page 2")],
+
         ));
   }
 }

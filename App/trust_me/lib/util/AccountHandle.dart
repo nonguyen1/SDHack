@@ -1,5 +1,6 @@
 String token;
 bool auth = false;
+String accountName = '';
 
 void updateToken(newToken) {
   token = newToken;
@@ -12,3 +13,9 @@ void updateAuth(newAuthStatus) {
 }
 
 bool getAuth() => auth;
+
+void updateAccountName(newAccountName) {
+  accountName = newAccountName;
+}
+
+String getAccountName() => accountName;

@@ -134,7 +134,8 @@ class _LoginState extends State<Login> {
             debugPrint('Authenticated');
             updateToken(userMap['token']);
             updateAuth(true);
-            Navigator.push(context, MaterialPageRoute(builder: (context) => Sign()));
+            updateAccountName(_userNameController.text);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Sign()));
           } else {
             print('Authentication failed. $userMap');
           }
