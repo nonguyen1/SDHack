@@ -8,6 +8,8 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
 const url ='mongodb://toto:ucsdhack2018@ds050087.mlab.com:50087/trustme'
 
+const libUsers = require("./lib/users/users.js")
+
 const secret ="toto";
 
 
@@ -26,6 +28,10 @@ MongoClient.connect(url)
    .then(database => {
      users = database.db().collection("users");
 
+     app.route('/users')
+         .post( libUsers.createUser)
+    
+    app.post('/loginUser', libUsers.loginUser )
 
 
 
