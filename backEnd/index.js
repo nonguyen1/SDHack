@@ -6,21 +6,21 @@ const bcrypt = require('bcryptjs');
 const bodyParser = require("body-parser");
 const MongoClient = require('mongodb').MongoClient;
 const ObjectID = require('mongodb').ObjectID;
-const url ='mongodb://toto:ucsdhack2018@ds050087.mlab.com:50087/trustme'
+const url ='mongodb://toto:ucsdhack2018@ds050087.mlab.com:50087/trustme';
+const cors = require('cors');
 
-const libUsers = require("./lib/users/users.js")
+
+const libUsers = require("./lib/users/users.js");
+const libMiddlewares = require("./lib/middlewares/middlewares.js");
+const libAgreements =require('./lib/agreements/agreements.js');
+
 
 const secret ="toto";
 
 
+app.use(cors())
 app.use(bodyParser.urlencoded( { extended: false}));
 app.use(bodyParser.json())
-
-//app.use(libMiddlewares.Cors);
-
-
-
-
 
 
 
@@ -32,6 +32,8 @@ MongoClient.connect(url)
          .post( libUsers.createUser)
     
     app.post('/loginUser', libUsers.loginUser )
+
+    app.post('/createAgreements', libMiddlewares.verifyTokenName,libAgreements.createAgreement )
 
 
 

@@ -29,6 +29,18 @@ module.exports.getUserAccount = (req,res) => {
 
 }
 
+module.exports.getUserName = (req,res, next) => {
+    users.findOne(
+      { _id: ObjectID(req.userId) },
+      { fields:{passwd: 0 }}
+    )
+        .then( item => {
+            req.username = item.mail;
+            next();
+        })
+       .catch(err => console.log("err" + err))
+  }
+
 
 module.exports.loginUser = (req,res) => {
   users.findOne({ mail: req.body.mail} )
