@@ -1,0 +1,32 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend trustMe App",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonguyen1/TrustMe.git"
+  },
+  "keywords": [
+    "trustMe",
+    "DocuSign"
+  ],
+  "author": "trust masters",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nonguyen1/TrustMe/issues"
+  },
+  "homepage": "https://github.com/nonguyen1/TrustMe#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "jsonwebtoken": "^8.3.0",
+    "mongodb": "^3.1.8",
+    "nodemon": "^1.18.4"
+  }
+}
