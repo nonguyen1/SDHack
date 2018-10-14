@@ -1,0 +1,43 @@
+body {
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    /* background-color: rgb(89, 135, 176); */
+    font-family: 'Source Sans Pro', sans-serif;
+    text-align: center;
+    padding: 50px;
+    color: white;
+    background-image: url('../images/office1.jpg');
+    height: 100%;
+}
+
+
+#billboard {
+    margin: 100px;
+    color: white;
+    text-align: center;
+    height: 300px;
+
+    /*
+    background-color: rgb(180, 180, 180); 
+     */
+
+    background-color: rgba(80, 80, 80, 0.7);
+    margin: 0px;
+    padding-bottom: 90px;
+}
+
+
+/*
+.profile_header {
+font-family: Arial, Verdana, sans-serif;
+}
+ */
+
+    .title_text {
+        margin: auto;
+        width: 50%;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
