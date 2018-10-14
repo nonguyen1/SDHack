@@ -11,12 +11,13 @@ class MyApp extends StatelessWidget {
       title: 'TrustMe',
       theme: new ThemeData(
           fontFamily: 'Product Sans',
-
 //        primarySwatch: Colors.blueGrey,
 //        backgroundColor: Colors.blueGrey,
 //        scaffoldBackgroundColor: Colors.blueGrey,
 //        cardColor: Colors.blueGrey,
-//        brightness: Brightness.dark
+        brightness: Brightness.dark,
+        accentColor: Colors.white,
+//        primaryColor: Color(0xFF),
       ),
       home: new Login()
     );

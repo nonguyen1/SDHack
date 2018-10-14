@@ -5,6 +5,8 @@ import 'package:trust_me/ui/Friends.dart';
 import 'package:trust_me/ui/Sign.dart';
 import 'package:trust_me/ui/WebSign.dart';
 import 'package:trust_me/util/AccountHandle.dart';
+import 'package:trust_me/ui/signature.dart';
+
 
 getDrawer(currentBuildContext) => new Drawer(
         child: ListView(
@@ -43,15 +45,15 @@ getDrawer(currentBuildContext) => new Drawer(
           onTap: () => Navigator.pushReplacement(currentBuildContext,
               MaterialPageRoute(builder: (context) => Sign())),
         ),
-        ListTile(
-          title: Row(children: <Widget>[
-            Icon(Icons.people),
-            Padding(padding: EdgeInsets.all(10.0)),
-            Text("Friends")
-          ]),
-          onTap: () => Navigator.pushReplacement(currentBuildContext,
-              MaterialPageRoute(builder: (context) => Friends())),
-        ),
+//        ListTile(
+//          title: Row(children: <Widget>[
+//            Icon(Icons.people),
+//            Padding(padding: EdgeInsets.all(10.0)),
+//            Text("Friends")
+//          ]),
+//          onTap: () => Navigator.pushReplacement(currentBuildContext,
+//              MaterialPageRoute(builder: (context) => Friends())),
+//        ),
         ListTile(
           title: Row(children: <Widget>[
             Icon(Icons.check),
@@ -63,14 +65,23 @@ getDrawer(currentBuildContext) => new Drawer(
         ),
         ListTile(
           title: Row(children: <Widget>[
-            Icon(Icons.web_asset),
+            Icon(Icons.check),
             Padding(padding: EdgeInsets.all(10.0)),
-            Text("WebSign")
+            Text("Pending Signature")
           ]),
           onTap: () => Navigator.pushReplacement(currentBuildContext,
-              MaterialPageRoute(builder: (context) => WebSign())),
-//            MaterialPageRoute(builder: (context) => null)),
+              MaterialPageRoute(builder: (context) => Signature())),
         ),
+//        ListTile(
+//          title: Row(children: <Widget>[
+//            Icon(Icons.web_asset),
+//            Padding(padding: EdgeInsets.all(10.0)),
+//            Text("WebSign")
+//          ]),
+//          onTap: () => Navigator.pushReplacement(currentBuildContext,
+//              MaterialPageRoute(builder: (context) => WebSign())),
+////            MaterialPageRoute(builder: (context) => null)),
+//        ),
         ListTile(
           title: Row(children: <Widget>[
             Icon(Icons.do_not_disturb_alt),

@@ -26,114 +26,128 @@ class _SignState extends State<Sign> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomPadding: false,
         appBar: AppBar(
           title: Text("Sign"),
         ),
         drawer: getDrawer(context),
         body: Builder(
-            builder: (context) => ListView(
+            builder: (context) => Stack(
                   children: <Widget>[
-                    Padding(padding: EdgeInsets.all(30.0)),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.person,
-                          size: 120.0,
+                    Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/bg1.png"),
+                          fit: BoxFit.cover,
                         ),
-                        Column(
+                      ),
+                    ),
+                    ListView(
+                      children: <Widget>[
+                        Padding(padding: EdgeInsets.all(30.0)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Icon(Icons.chevron_right, size: 100.0)
+                            Icon(
+                              Icons.person,
+                              size: 120.0,
+                            ),
+                            Column(
+                              children: <Widget>[
+                                Icon(Icons.chevron_right, size: 100.0)
+                              ],
+                            ),
+                            Icon(
+                              Icons.person,
+                              size: 120.0,
+                            ),
                           ],
                         ),
-                        Icon(
-                          Icons.person,
-                          size: 120.0,
-                        ),
-                      ],
-                    ),
-                    Padding(padding: EdgeInsets.all(15.0)),
-                    Row(
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.all(5.0)),
-                        Text(
-                          "Agreement with:",
-                          style: TextStyle(
-                              fontSize: 20.0, fontWeight: FontWeight.w500),
-                        ),
-                        Padding(padding: EdgeInsets.all(5.0)),
-                        Flexible(
-                          child: TextField(
-                            controller: _recipientController,
-                            decoration:
-                                InputDecoration(hintText: "Recepient Email"),
-                            style:
-                                TextStyle(fontSize: 15.0, color: Colors.black),
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.all(5.0))
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    ),
-                    Padding(padding: EdgeInsets.all(20.0)),
-                    Row(
-                      children: <Widget>[
-                        Padding(padding: EdgeInsets.all(10.0)),
-                        Flexible(
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            controller: _descriptionController,
-                            maxLines: 3,
-                            decoration: InputDecoration(
-                              hintText: "Contract content",
-                            ),
-                            style:
-                                TextStyle(fontSize: 20.0, color: Colors.black),
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.all(10.0)),
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.center,
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Checkbox(
-                            value: signed,
-                            onChanged: (bool val) {
-                              setState(() {
-                                signed = val;
-                              });
-                            }),
-                        Flexible(
-                          child: Text("Sign the agreement"),
-                        ),
-                        Padding(padding: EdgeInsets.all(10.0)),
-                        Expanded(
-                            child: Row(
+                        Padding(padding: EdgeInsets.all(15.0)),
+                        Row(
                           children: <Widget>[
-                            Flexible(child: Text("Time")),
+                            Padding(padding: EdgeInsets.all(5.0)),
+                            Text(
+                              "Agreement with:",
+                              style: TextStyle(
+                                  fontSize: 20.0, fontWeight: FontWeight.w500),
+                            ),
+                            Padding(padding: EdgeInsets.all(5.0)),
+                            Flexible(
+                              child: TextField(
+                                controller: _recipientController,
+                                decoration: InputDecoration(
+                                    hintText: "Recepient Email"),
+                                style: TextStyle(
+                                    fontSize: 15.0, color: Colors.black),
+                              ),
+                            ),
                             Padding(padding: EdgeInsets.all(5.0))
                           ],
-                          mainAxisAlignment: MainAxisAlignment.end,
-                        ))
-                      ],
-                      mainAxisAlignment: MainAxisAlignment.start,
-                    ),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                        Padding(padding: EdgeInsets.all(20.0)),
+                        Row(
+                          children: <Widget>[
+                            Padding(padding: EdgeInsets.all(10.0)),
+                            Flexible(
+                              child: TextField(
+                                keyboardType: TextInputType.multiline,
+                                controller: _descriptionController,
+                                maxLines: 3,
+                                decoration: InputDecoration(
+                                  hintText: "Contract content",
+                                ),
+                                style: TextStyle(
+                                    fontSize: 20.0, color: Colors.black),
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.all(10.0)),
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.center,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Checkbox(
+                                value: signed,
+                                onChanged: (bool val) {
+                                  setState(() {
+                                    signed = val;
+                                  });
+                                }),
+                            Flexible(
+                              child: Text("Sign the agreement"),
+                            ),
+                            Padding(padding: EdgeInsets.all(10.0)),
+                            Expanded(
+                                child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                    child: Text(DateTime.now().toString())),
+//                                Padding(padding: EdgeInsets.all(1.0))
+                              ],
+                              mainAxisAlignment: MainAxisAlignment.end,
+                            ))
+                          ],
+                          mainAxisAlignment: MainAxisAlignment.start,
+                        ),
 //            Expanded(
 //                child: Column(
 //              children: <Widget>[],
 //              mainAxisAlignment: MainAxisAlignment.end,
 //            )),
-                    Padding(padding: EdgeInsets.all(20.0)),
-                    // TODO: Fix the button placement issue
-                    RaisedButton(
-                      onPressed: () => signed
-                          ? docuSign(context)
-                          : Scaffold.of(context).showSnackBar(MUST_SIGN_SB),
-                      child: Text(
-                        "Docusign!!",
-                      ),
-                    ),
+                        Padding(padding: EdgeInsets.all(20.0)),
+                        // TODO: Fix the button placement issue
+                        RaisedButton(
+                          onPressed: () => signed
+                              ? docuSign(context)
+                              : Scaffold.of(context).showSnackBar(MUST_SIGN_SB),
+                          child: Text(
+                            "Docusign!!",
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 )));
   }
@@ -145,7 +159,7 @@ class _SignState extends State<Sign> {
       return;
     } else {
       Scaffold.of(context).showSnackBar(SENDING_SB);
-      var url = "https://trustme-219322.appspot.com/createAgreements";
+      var url = "http://la6.scottz.net:8080/createAgreements";
       debugPrint('Trying to send, my token is ${getToken()}');
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
@@ -164,11 +178,11 @@ class _SignState extends State<Sign> {
           }
         } else {
           debugPrint(
-              "Error. Response Code is ${response.statusCode} body is ${response.body}");
+              "Response Code is ${response.statusCode} body is ${response.body}");
         }
         Scaffold.of(context).showSnackBar(SnackBar(
             content: Text(
-                'Error. Response Code is ${response.statusCode} body is ${response.body}')));
+                'Response Code is ${response.statusCode} body is ${response.body}')));
       });
     }
   }
