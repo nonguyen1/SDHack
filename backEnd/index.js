@@ -27,6 +27,7 @@ app.use(bodyParser.json())
 MongoClient.connect(url)
    .then(database => {
      users = database.db().collection("users");
+     agreements = database.db().collection("agreements");
 
      app.route('/users')
          .post( libUsers.createUser)
@@ -34,6 +35,10 @@ MongoClient.connect(url)
     app.post('/loginUser', libUsers.loginUser )
 
     app.post('/createAgreements', libMiddlewares.verifyTokenName,libAgreements.createAgreement )
+
+    app.post('/generateAgreements',libMiddlewares.verifyTokenName,libAgreements.generatePdf )
+
+    app.get('/getAgreements',libMiddlewares.verifyTokenName,libAgreements.getAgreements )
 
 
 
