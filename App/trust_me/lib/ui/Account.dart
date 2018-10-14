@@ -14,13 +14,16 @@ class _LoginState extends State<Login> {
   final TextEditingController _userNameController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
   BuildContext _scaffoldContext;
+
   @override
   Widget build(BuildContext context) => Scaffold(
 //      drawer: getDrawer(),
-        appBar: AppBar(
-          title: Text("Trust Me"),
-        ),
-        body: Container(
+      appBar: AppBar(
+        title: Text("Trust Me"),
+      ),
+      body: Builder(builder: (context) {
+        _scaffoldContext = context;
+        return Container(
           child: ListView(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(20.0)),
@@ -84,13 +87,13 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
-        ),
-      );
+        );
+      }));
 
   createAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      var url = "http://la6.scottz.net:3000/users";
+      var url = "https://trustme-219322.appspot.com/users";
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }, body: {
@@ -101,16 +104,20 @@ class _LoginState extends State<Login> {
           Map userMap = json.decode(response.body);
           debugPrint(userMap.toString());
           if (userMap['auth']) {
-            Scaffold.of(context).showSnackBar(SnackBar(
+            debugPrint('Successfully Registered. Please log in.');
+            Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
                 content: Text('Successfully Registered. Please log in.')));
             updateToken(userMap['token']);
             updateAuth(true);
           } else {
-            Scaffold.of(context).showSnackBar(
+            debugPrint('Registration failed. $userMap');
+            Scaffold.of(_scaffoldContext).showSnackBar(
                 SnackBar(content: Text('Registration failed. $userMap')));
           }
         } else {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          debugPrint(
+              'Registration Error. Response Code is ${response.statusCode} body is ${response.body}');
+          Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
               content: Text(
                   'Registration Error. Response Code is ${response.statusCode} body is ${response.body}')));
           debugPrint(
@@ -123,20 +130,20 @@ class _LoginState extends State<Login> {
   loginAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      var url = "http://la6.scottz.net:3000/loginUser";
+      var url = "https://trustme-219322.appspot.com/loginUser";
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }, body: {
         "mail": _userNameController.text,
         "passwd": _passwordController.text
       }).then((response) {
+        debugPrint(response.body.toString());
         if (response.statusCode == 201) {
           Map userMap = json.decode(response.body);
           debugPrint(userMap.toString());
           if (userMap['auth']) {
-            // TODO: Fix the snakebar!
-//            Scaffold.of(context).showSnackBar(SnackBar(
-//                content: Text('Welcome back ${_userNameController.text}')));
+            Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+                content: Text('Welcome back ${_userNameController.text}')));
             debugPrint('Authenticated');
             updateToken(userMap['token']);
             updateAuth(true);
@@ -144,19 +151,17 @@ class _LoginState extends State<Login> {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => Sign()));
           } else {
-            Scaffold.of(context).showSnackBar(
+            debugPrint('Authentication failed. $userMap');
+            Scaffold.of(_scaffoldContext).showSnackBar(
                 SnackBar(content: Text('Authentication failed. $userMap')));
           }
         } else {
-          Scaffold.of(context).showSnackBar(SnackBar(
+          Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
               content: Text(
-                  'Login Error. Response Code is ${response
-                      .statusCode} body is ${response.body}')));
+                  'Login Error. Response Code is ${response.statusCode} body is ${response.body}')));
           debugPrint(
-              "Login Error. Response Code is ${response
-                  .statusCode} body is ${response.body}");
+              "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
         }
-
       });
     }
   }

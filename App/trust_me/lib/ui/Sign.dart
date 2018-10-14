@@ -145,7 +145,7 @@ class _SignState extends State<Sign> {
       return;
     } else {
       Scaffold.of(context).showSnackBar(SENDING_SB);
-      var url = "http://la6.scottz.net:3000/createAgreements";
+      var url = "https://trustme-219322.appspot.com/createAgreements";
       debugPrint('Trying to send, my token is ${getToken()}');
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
