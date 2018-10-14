@@ -18,6 +18,7 @@ const libAgreements =require('./lib/agreements/agreements.js');
 const secret ="toto";
 
 
+app.use(express.static('./'));
 app.use(cors())
 app.use(bodyParser.urlencoded( { extended: false}));
 app.use(bodyParser.json())
