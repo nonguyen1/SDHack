@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:trust_me/util/AccountHandle.dart';
 import 'package:trust_me/ui/Sign.dart';
+import 'package:trust_me/util/AccountHandle.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -12,81 +13,79 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController _userNameController = new TextEditingController();
   final TextEditingController _passwordController = new TextEditingController();
-
+  BuildContext _scaffoldContext;
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
 //      drawer: getDrawer(),
-      appBar: AppBar(
-        title: Text("Login"),
-      ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.all(20.0)),
-            // Login text
-            Center(
+        appBar: AppBar(
+          title: Text("Trust Me"),
+        ),
+        body: Container(
+          child: ListView(
+            children: <Widget>[
+              Padding(padding: EdgeInsets.all(20.0)),
+              // Login text
+              Center(
 //              child: Text(
 //                'Login',
 //                style: TextStyle(fontSize: 50.0),
 //              ),
-            child: Image.asset('assets/face.png'),
-            ),
-            Padding(padding: EdgeInsets.all(10.0)),
-            // Username text box
-            Row(
-              children: <Widget>[
-                Padding(padding: EdgeInsets.all(10.0)),
-                Flexible(
-                  child: TextField(
-                    controller: _userNameController,
-                    decoration: InputDecoration(
-                        hintText: 'Username', icon: Icon(Icons.person)),
-                  ),
-                ),
-                Padding(padding: EdgeInsets.all(10.0)),
-              ],
-            ),
-            Padding(padding: EdgeInsets.all(10.0)),
-            // Password text box
-            Row(
-              children: <Widget>[
-                Padding(padding: EdgeInsets.all(10.0)),
-                Flexible(
+                child: Image.asset('assets/face.png'),
+              ),
+              Padding(padding: EdgeInsets.all(10.0)),
+              // Username text box
+              Row(
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.all(10.0)),
+                  Flexible(
                     child: TextField(
-                  obscureText: true,
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      hintText: 'Password', icon: Icon(Icons.lock)),
-                )),
-                Padding(padding: EdgeInsets.all(10.0)),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
-                    onPressed: loginAccount,
-                    child: Text(
-                      'Login',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.w500),
-                    )),
-                Padding(padding: EdgeInsets.all(50.0)),
-                RaisedButton(
-                    onPressed: createAccount,
-                    child: Text(
-                      'Register',
-                      style: TextStyle(
-                          fontSize: 20.0, fontWeight: FontWeight.w500),
-                    )),
-              ],
-            ),
-          ],
+                      controller: _userNameController,
+                      decoration: InputDecoration(
+                          hintText: 'Username', icon: Icon(Icons.person)),
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.all(10.0)),
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(10.0)),
+              // Password text box
+              Row(
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.all(10.0)),
+                  Flexible(
+                      child: TextField(
+                    obscureText: true,
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                        hintText: 'Password', icon: Icon(Icons.lock)),
+                  )),
+                  Padding(padding: EdgeInsets.all(10.0)),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  RaisedButton(
+                      onPressed: loginAccount,
+                      child: Text(
+                        'Login',
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                      )),
+                  Padding(padding: EdgeInsets.all(50.0)),
+                  RaisedButton(
+                      onPressed: createAccount,
+                      child: Text(
+                        'Register',
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                      )),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   createAccount() {
     if (_userNameController.text.isNotEmpty &&
@@ -102,16 +101,20 @@ class _LoginState extends State<Login> {
           Map userMap = json.decode(response.body);
           debugPrint(userMap.toString());
           if (userMap['auth']) {
-            debugPrint('Registered');
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text('Successfully Registered. Please log in.')));
             updateToken(userMap['token']);
             updateAuth(true);
           } else {
-            print('Registration failed. $userMap');
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text('Registration failed. $userMap')));
           }
         } else {
-          // TODO: Print this on screen
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Registration Error. Response Code is ${response.statusCode} body is ${response.body}')));
           debugPrint(
-              "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
+              "Registration Failed. Response Code is ${response.statusCode} body is ${response.body}");
         }
       });
     }
@@ -131,20 +134,29 @@ class _LoginState extends State<Login> {
           Map userMap = json.decode(response.body);
           debugPrint(userMap.toString());
           if (userMap['auth']) {
+            // TODO: Fix the snakebar!
+//            Scaffold.of(context).showSnackBar(SnackBar(
+//                content: Text('Welcome back ${_userNameController.text}')));
             debugPrint('Authenticated');
             updateToken(userMap['token']);
             updateAuth(true);
             updateAccountName(_userNameController.text);
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Sign()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => Sign()));
           } else {
-            print('Authentication failed. $userMap');
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text('Authentication failed. $userMap')));
           }
         } else {
-          // TODO: Print this on screen
+          Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text(
+                  'Login Error. Response Code is ${response
+                      .statusCode} body is ${response.body}')));
           debugPrint(
-              "Login Error. Response Code is ${response.statusCode} body is ${response.body}");
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text('hi')));
+              "Login Error. Response Code is ${response
+                  .statusCode} body is ${response.body}");
         }
+
       });
     }
   }

@@ -10,7 +10,13 @@ class MyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'TrustMe',
       theme: new ThemeData(
-        primarySwatch: Colors.blue,
+          fontFamily: 'Product Sans',
+
+//        primarySwatch: Colors.blueGrey,
+//        backgroundColor: Colors.blueGrey,
+//        scaffoldBackgroundColor: Colors.blueGrey,
+//        cardColor: Colors.blueGrey,
+//        brightness: Brightness.dark
       ),
       home: new Login()
     );

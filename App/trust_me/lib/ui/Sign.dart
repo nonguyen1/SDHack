@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:trust_me/util/AccountHandle.dart';
 
 import 'Drawer.dart';
 
@@ -10,7 +14,8 @@ class Sign extends StatefulWidget {
 class _SignState extends State<Sign> {
   bool signed = false;
   final MUST_SIGN_SB = SnackBar(content: Text('Please sign the agreement'));
-  final CHECK_INPUT_SN = SnackBar(content: Text('You have to fill the recipient email and content'));
+  final CHECK_INPUT_SN = SnackBar(
+      content: Text('You have to fill the recipient email and content'));
   final SENDING_SB = SnackBar(content: Text('Sending agreement to docusign'));
   final SENT_SB = SnackBar(content: Text('Sent'));
   final TextEditingController _recipientController =
@@ -21,7 +26,9 @@ class _SignState extends State<Sign> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text("Sign"),),
+        appBar: AppBar(
+          title: Text("Sign"),
+        ),
         drawer: getDrawer(context),
         body: Builder(
             builder: (context) => ListView(
@@ -130,16 +137,39 @@ class _SignState extends State<Sign> {
                   ],
                 )));
   }
+
   docuSign(context) {
-    if(_recipientController.text.isEmpty || _descriptionController.text.isEmpty) {
+    if (_recipientController.text.isEmpty ||
+        _descriptionController.text.isEmpty) {
       Scaffold.of(context).showSnackBar(CHECK_INPUT_SN);
       return;
-    }
-    else {
+    } else {
       Scaffold.of(context).showSnackBar(SENDING_SB);
-      // TODO: Implement send
-      // Once success received
-      Scaffold.of(context).showSnackBar(SENT_SB);
+      var url = "http://la6.scottz.net:3000/createAgreements";
+      debugPrint('Trying to send, my token is ${getToken()}');
+      http.post(url, headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "x-access-token": getToken()
+      }, body: {
+        "receiver": _recipientController.text,
+        "agreement": _descriptionController.text
+      }).then((response) {
+        if (response.statusCode == 200) {
+          Map userMap = json.decode(response.body);
+          debugPrint(userMap.toString());
+          if (userMap['sender'] == getAccountName() &&
+              userMap['receiver'] == _recipientController.text &&
+              userMap['agreement'] == _descriptionController.text) {
+            Scaffold.of(context).showSnackBar(SENT_SB);
+          }
+        } else {
+          debugPrint(
+              "Error. Response Code is ${response.statusCode} body is ${response.body}");
+        }
+        Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(
+                'Error. Response Code is ${response.statusCode} body is ${response.body}')));
+      });
     }
   }
 }
