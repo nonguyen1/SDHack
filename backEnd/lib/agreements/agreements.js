@@ -147,4 +147,37 @@ module.exports.getAgreements = (req, res) => {
     .then(items => res.status(200).json(items))
 }
 
+module.exports.getCreatedAgreements = (req, res) => {
+    agreements.find( { sender: req.username } )
+    .toArray()
+    .then(items => res.status(200).json(items))
+}
+
+module.exports.putState = (req, res) => {
+    agreements.update({ envelopeId: req.body.envelopeId }, { $set: { state: req.body.state }})
+    .then(() => {
+        if( req.body.state !== 'signed' ){
+            agreements.findOne(
+                { envelopeId: req.body.envelopeId })
+            .then( ( agreement) => {
+                console.log(agreement.receiver)
+                users.findOne(
+                    { mail: agreement.receiver })
+                    .then( (user) => {
+                        if( req.body.state === 'satisfied'){
+                            user.validAgreements +=1
+                        } else {
+                            user.unvalidAgreements += 1
+                        }
+                        users.update({ mail: agreement.receiver },{ $set: user})
+                    })
+                })
+            
+        }
+    })
+    .then(res.json(req.body))
+    .catch(err => console.log("Error: " + err))
+}
+
+
 

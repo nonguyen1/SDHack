@@ -18,6 +18,15 @@ module.exports.userChecker = (req,res,next) => {
   next();
 }
 
+module.exports.getUserRatio = (req,res) => {
+  console.log(req.query.mail)
+  users.findOne(
+    { mail: req.query.mail },
+    { fields:{passwd: 0 }}
+  )
+     .then(item => (item) ? res.json(item) : res.status(404).json({ error: "Entity not found." }))
+     .catch(err => console.log("err" + err))
+}
 
 module.exports.getUserAccount = (req,res) => {
   users.findOne(

@@ -34,12 +34,17 @@ MongoClient.connect(url)
     
     app.post('/loginUser', libUsers.loginUser )
 
+    app.get('/getUserRatio',libUsers.getUserRatio )
+
     app.post('/createAgreements', libMiddlewares.verifyTokenName,libAgreements.createAgreement )
 
     app.post('/generateAgreements',libMiddlewares.verifyTokenName,libAgreements.generatePdf )
 
     app.get('/getAgreements',libMiddlewares.verifyTokenName,libAgreements.getAgreements )
 
+    app.get('/getCreatedAgreements',libMiddlewares.verifyTokenName,libAgreements.getCreatedAgreements )
+
+    app.put('/putState',libAgreements.putState )
 
 
 
