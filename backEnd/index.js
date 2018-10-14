@@ -28,6 +28,7 @@ MongoClient.connect(url)
    .then(database => {
      users = database.db().collection("users");
      agreements = database.db().collection("agreements");
+     users.createIndex( { "mail" : 1 }, { unique : true });
 
      app.route('/users')
          .post( libUsers.createUser)
@@ -97,6 +98,6 @@ MongoClient.connect(url)
 
 
 */
-      app.listen(3000, () => console.log("Awaiting requests."));
+      app.listen(8080, () => console.log("Awaiting requests."));
    })
    .catch(err => {throw err });
