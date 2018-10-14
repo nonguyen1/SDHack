@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trust_me/ui/Account.dart';
 import 'package:trust_me/ui/Agreements.dart';
 import 'package:trust_me/ui/Friends.dart';
 import 'package:trust_me/ui/Sign.dart';
@@ -12,7 +13,10 @@ getDrawer(currentBuildContext) => new Drawer(
         Container(
           height: 150.0,
           child: new UserAccountsDrawerHeader(
-            accountName: new Text(getAccountName(), style: TextStyle(fontSize: 20.0),),
+            accountName: new Text(
+              getAccountName(),
+              style: TextStyle(fontSize: 20.0),
+            ),
             accountEmail: null,
             currentAccountPicture: Stack(
               alignment: FractionalOffset.center,
@@ -65,6 +69,19 @@ getDrawer(currentBuildContext) => new Drawer(
           ]),
           onTap: () => Navigator.pushReplacement(currentBuildContext,
               MaterialPageRoute(builder: (context) => WebSign())),
+//            MaterialPageRoute(builder: (context) => null)),
+        ),
+        ListTile(
+          title: Row(children: <Widget>[
+            Icon(Icons.do_not_disturb_alt),
+            Padding(padding: EdgeInsets.all(10.0)),
+            Text("Sign Out")
+          ]),
+          onTap: () {
+            clearStuff();
+            Navigator.pushReplacement(currentBuildContext,MaterialPageRoute(builder: (context) => Login()));
+          },
+//            MaterialPageRoute(builder: (context) => null)),
         ),
       ],
     ));
