@@ -18,82 +18,105 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) => Scaffold(
 //      drawer: getDrawer(),
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
         title: Text("Trust Me"),
       ),
       body: Builder(builder: (context) {
         _scaffoldContext = context;
-        return Container(
-          child: ListView(
-            children: <Widget>[
-              Padding(padding: EdgeInsets.all(20.0)),
-              // Login text
-              Center(
+        return Stack(
+          children: <Widget>[
+            new Container(
+              decoration: new BoxDecoration(
+                image: new DecorationImage(
+                  image: new AssetImage("assets/background_crop.png"),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Container(
+              child: ListView(
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.all(20.0)),
+                  // Login text
+                  Center(
 //              child: Text(
 //                'Login',
 //                style: TextStyle(fontSize: 50.0),
 //              ),
-                child: Image.asset('assets/face.png'),
-              ),
-              Padding(padding: EdgeInsets.all(10.0)),
-              // Username text box
-              Row(
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.all(10.0)),
-                  Flexible(
-                    child: TextField(
-                      controller: _userNameController,
-                      decoration: InputDecoration(
-                          hintText: 'Username', icon: Icon(Icons.person)),
-                    ),
+//                    child: Image.asset('assets/face.png'),
+                      child: Container(
+                    child: Image.asset('assets/logo.png'),
+                    width: 200.0,
+                    height: 200.0,
+                    alignment: Alignment(0.0, -0.3),
+                  )),
+//                  Padding(padding: EdgeInsets.all(10.0)),
+                  // Username text box
+                  Row(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.all(10.0)),
+                      Flexible(
+                        child: TextField(
+                          controller: _userNameController,
+                          decoration: InputDecoration(
+                            hintText: "Username",
+                            icon: Icon(Icons.person),
+                          ),
+                        ),
+                      ),
+                      Padding(padding: EdgeInsets.all(10.0)),
+                    ],
                   ),
                   Padding(padding: EdgeInsets.all(10.0)),
-                ],
-              ),
-              Padding(padding: EdgeInsets.all(10.0)),
-              // Password text box
-              Row(
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.all(10.0)),
-                  Flexible(
-                      child: TextField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                        hintText: 'Password', icon: Icon(Icons.lock)),
-                  )),
-                  Padding(padding: EdgeInsets.all(10.0)),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  RaisedButton(
-                      onPressed: loginAccount,
-                      child: Text(
-                        'Login',
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
+                  // Password text box
+                  Row(
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.all(10.0)),
+                      Flexible(
+                          child: TextField(
+                        obscureText: true,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                            hintText: 'Password', icon: Icon(Icons.lock)),
                       )),
-                  Padding(padding: EdgeInsets.all(50.0)),
-                  RaisedButton(
-                      onPressed: createAccount,
-                      child: Text(
-                        'Register',
-                        style: TextStyle(
-                            fontSize: 20.0, fontWeight: FontWeight.w500),
-                      )),
+                      Padding(padding: EdgeInsets.all(10.0)),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(5.0),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      RaisedButton(
+                          onPressed: loginAccount,
+                          child: Text(
+                            'Login',
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.w500),
+                          )),
+                      Padding(padding: EdgeInsets.all(50.0)),
+                      RaisedButton(
+                          onPressed: createAccount,
+                          child: Text(
+                            'Register',
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.w500),
+                          )),
+                    ],
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+          ],
         );
       }));
 
   createAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      var url = "https://trustme-219322.appspot.com/users";
+      var url = "http://la6.scottz.net:8080/users";
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }, body: {
@@ -130,7 +153,7 @@ class _LoginState extends State<Login> {
   loginAccount() {
     if (_userNameController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty) {
-      var url = "https://trustme-219322.appspot.com/loginUser";
+      var url = "http://la6.scottz.net:8080/loginUser";
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded"
       }, body: {

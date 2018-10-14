@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_view/flutter_web_view.dart';
-import 'package:trust_me/util/AccountHandle.dart';
 import 'package:trust_me/ui/Drawer.dart';
 import 'package:trust_me/ui/Sign.dart';
+import 'package:trust_me/util/AccountHandle.dart';
+import 'package:http/http.dart' as http;
+
 
 class WebSign extends StatefulWidget {
   @override
@@ -43,6 +45,10 @@ class _WebSignState extends State<WebSign> {
         ),
       ),
     );
+
+    // Auto launch webview
+    launchWebViewExample();
+    // ^^^ Auto launch webview
     return app;
   }
 
@@ -55,7 +61,8 @@ class _WebSignState extends State<WebSign> {
         headers: {
           "X-SOME-HEADER": "MyCustomHeader",
         },
-        javaScriptEnabled: true, // Enable this to get docusign web page working
+        javaScriptEnabled: true,
+        // Enable this to get docusign web page working
         toolbarActions: [
           new ToolbarAction("Dismiss", 1),
           new ToolbarAction("Reload", 2)
@@ -83,16 +90,16 @@ class _WebSignState extends State<WebSign> {
     });
     flutterWebView.onRedirect.listen((url) {
       debugPrint(url);
-      if(url == "http://localhost:4000/dsreturn?event=viewing_complete") {
+      if (url == "http://localhost:4000/dsreturn?event=viewing_complete") {
         debugPrint("Viewing complete");
-      }
-      else if(url == "http://localhost:4000/dsreturn?event=signing_complete") {
-        // TODO: Send server a complete message
+      } else if (url ==
+          "http://localhost:4000/dsreturn?event=signing_complete") {
+        signComplete();
       }
       flutterWebView.dismiss();
       setState(() => _redirectedToUrl = url);
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => Sign()));
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Sign()));
     });
   }
 
@@ -103,5 +110,18 @@ class _WebSignState extends State<WebSign> {
         "X-SOME-HEADER": "MyCustomHeader",
       },
     );
+  }
+
+  signComplete() {
+    debugPrint("Telling the server completion of the signature");
+    http.put("http://la6.scottz.net:8080/putState", headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }, body: {
+      "envelopeId": getEnv(),
+      "status": "signed"
+    }).then((response) {
+      debugPrint(response.body.toString());
+    });
+    clearStuff();
   }
 }

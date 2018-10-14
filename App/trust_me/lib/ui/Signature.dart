@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trust_me/util/AccountHandle.dart';
 import 'Drawer.dart';
+import 'package:trust_me/ui/WebSign.dart';
 
-class Agreements extends StatefulWidget {
+
+class Signature extends StatefulWidget {
   @override
-  _AgreementsState createState() => _AgreementsState();
+  _SignatureState createState() => _SignatureState();
 }
 
-class _AgreementsState extends State<Agreements> {
-  _AgreementsState() {
-    clearStuff();
-    fetchAgreements();
+class _SignatureState extends State<Signature> {
+  _SignatureState() {
+    fetchEnvolopes();
   }
 
   Widget agreementCanvas = Center(
@@ -29,14 +30,12 @@ class _AgreementsState extends State<Agreements> {
         appBar: AppBar(title: Text("Agreement")),
         drawer: getDrawer(context),
         body: Builder(builder: (context) {
-//          fetchAgreements();
           return agreementCanvas;
         }));
   }
 
   Widget contentBuilder() {
-//    debugPrint(getAgreementLength().toString());
-    if (getAgreementLength() == 0) {
+    if (bGetLeng() == 0) {
       return Center(
         child: Text(
           "No agreements to display",
@@ -45,14 +44,16 @@ class _AgreementsState extends State<Agreements> {
       );
     } else {
       List<Widget> cardList = [];
-      for (int i = 0; i < getAgreementLength(); i++) {
+      for (int i = 0; i < bGetLeng(); i++) {
         debugPrint("In loop $i");
+        var bMap = bEntryExtract(i);
         cardList.add(
           new myCardLayout(
             theIcon: Icons.brightness_1,
-            theText: getEntry(i)['receiver'],
-            aggr: getEntry(i)['agreement'],
-            envelopeId: getEntry(i)['envelope'],
+            theText: bEntryExtract(i)['sender'],
+            aggr: bEntryExtract(i)['agreement'],
+            envelopeId: bEntryExtract(i)['envolopes'],
+            receiver: bEntryExtract(i)['receiver']
           ),
         );
       }
@@ -61,19 +62,23 @@ class _AgreementsState extends State<Agreements> {
     }
   }
 
-  fetchAgreements() async {
+  fetchEnvolopes() async {
+    debugPrint("Getting envolopes");
     http.get("http://la6.scottz.net:8080/getAgreements", headers: {
       "Content-Type": "application/x-www-form-urlencoded",
       "x-access-token": getToken()
     }).then((response) {
-      debugPrint(response.body.toString());
-      var aggrList = json.decode(response.body);
-      debugPrint(aggrList.length.toString());
-      for (int i = 0; i < aggrList.length; i++) {
-        debugPrint(aggrList[i]['state'].toString());
-        if(aggrList[i]['state'] == 'pending') {
-          newEntry(aggrList[i]['envelopeId'], aggrList[i]['agreement'],
-              aggrList[i]['receiver']);
+      var dataLs = json.decode(response.body);
+      debugPrint(dataLs.toString());
+      for(int i = 0; i < dataLs.length; i++) {
+        debugPrint("1");
+        debugPrint(dataLs[i].toString());
+        debugPrint('2');
+        if(dataLs[i]['state'] == 'pending') {
+          bUpdateEntry(
+              dataLs[i]['sender'], dataLs[i]['receive'], dataLs[i]['agreement'],
+              dataLs[i]['envelopeId']);
+          debugPrint('3');
         }
       }
       setState(() {
@@ -81,8 +86,23 @@ class _AgreementsState extends State<Agreements> {
       });
     });
   }
+}
 
-  fetchURL(envID, agree) async {
+class myCardLayout extends StatelessWidget {
+  // default constructor
+  myCardLayout({this.theIcon, this.theText, this.aggr, this.envelopeId, this.receiver});
+
+  // init variables
+  final IconData theIcon;
+  final String theText;
+  final String aggr;
+  final String envelopeId;
+  final String receiver;
+
+
+  fetchAgreements(agreement, envID, context) async {
+    debugPrint(envID);
+    debugPrint(agreement);
     http.post("http://la6.scottz.net:8080/generateAgreements",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -90,26 +110,19 @@ class _AgreementsState extends State<Agreements> {
         },
         body: {
           "receiver": getAccountName(),
-          "agreement": agree,
+          "agreement": agreement,
           "envelopeId": envID
         }).then((response) {
-      var dec = json.decode(response.body);
-      debugPrint(dec['signingUrl']);
-      return dec['signingUrl'];
+          debugPrint("Response get");
+//      debugPrint(response.body.toString());
+      var aggrList = json.decode(response.body);
+//      debugPrint(aggrList.toString());
+      var sigURL = aggrList['signingUrl'];
+    debugPrint(sigURL);
+    setWeb(sigURL, envID);
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => WebSign()));
     });
   }
-}
-
-class myCardLayout extends StatelessWidget {
-  // default constructor
-  myCardLayout({this.theIcon, this.theText, this.aggr, this.envelopeId});
-
-  // init variables
-  final IconData theIcon;
-  final String theText;
-  final String aggr;
-  final String envelopeId;
-
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -130,15 +143,13 @@ class myCardLayout extends StatelessWidget {
               child: new ButtonBar(
                 children: <Widget>[
                   new FlatButton(
-                    child: const Text('Satisfyed'),
+                    child: const Text('Sign'),
                     onPressed: () {
-                      satisfied(envelopeId);
-                    },
-                  ),
-                  new FlatButton(
-                    child: const Text('Unsatisfyed'),
-                    onPressed: () {
-                      unsatisfied(envelopeId);
+                      debugPrint("call");
+                      debugPrint(aggr);
+                      debugPrint(envelopeId);
+                      fetchAgreements(aggr, envelopeId, context);
+//                      getURL(i);
                     },
                   ),
                 ],
@@ -148,28 +159,5 @@ class myCardLayout extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  satisfied(envelopeId) {
-    debugPrint("J$envelopeId");
-    http.put("http://la6.scottz.net:8080/putState", headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }, body: {
-      "envelopeId": envelopeId,
-      "status": "satisfied"
-    }).then((response) {
-      debugPrint(response.body.toString());
-    });
-  }
-
-  unsatisfied(envelopeId) {
-    http.put("http://la6.scottz.net:8080/putState", headers: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }, body: {
-      "envelopeId": envelopeId,
-      "status": "unsatisfied"
-    }).then((response) {
-      debugPrint(response.body.toString());
-    });
   }
 }
