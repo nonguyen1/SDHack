@@ -24,3 +24,7 @@ The project consisted of 3 parts
 * Flutter.io frontend
 * Node.js API hosted on Google Cloud Platform (GCP)
 
+## Screenshots
+<img src="Images/Login.png" width=200/>
+<img src="Images/Menu.png" width=200/>
+<img src="Images/Sign.png" width=200/>
