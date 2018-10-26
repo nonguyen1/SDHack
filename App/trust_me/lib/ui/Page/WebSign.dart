@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_web_view/flutter_web_view.dart';
-import 'package:trust_me/ui/Drawer.dart';
-import 'package:trust_me/ui/Sign.dart';
+import 'package:trust_me/ui/Builder/Drawer.dart';
+import 'package:trust_me/ui/Page/Sign.dart';
 import 'package:trust_me/util/AccountHandle.dart';
 import 'package:http/http.dart' as http;
-
+import 'package:trust_me/util/AgreementHandle.dart';
 
 class WebSign extends StatefulWidget {
   @override
@@ -117,11 +117,11 @@ class _WebSignState extends State<WebSign> {
     http.put("http://la6.scottz.net:8080/putState", headers: {
       "Content-Type": "application/x-www-form-urlencoded"
     }, body: {
-      "envelopeId": getEnv(),
+      "envelopeId": getEnvelopeID(),
       "status": "signed"
     }).then((response) {
       debugPrint(response.body.toString());
     });
-    clearStuff();
+    clearBufferedAgreements();
   }
 }

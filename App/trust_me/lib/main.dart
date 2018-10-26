@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:trust_me/ui/Account.dart';
+import 'package:trust_me/ui/Page/Account.dart';
 
 void main() => runApp(new MyApp());
 

@@ -1,4 +1,4 @@
-package com.example.trustme;
+package com.scott.trustme.trustme;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

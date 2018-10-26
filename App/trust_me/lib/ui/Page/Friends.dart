@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'Drawer.dart';
+import 'package:trust_me/ui/Builder/Drawer.dart';
 
 class Friends extends StatefulWidget {
   @override

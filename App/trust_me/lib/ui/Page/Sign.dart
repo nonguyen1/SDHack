@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:trust_me/util/AccountHandle.dart';
-
-import 'Drawer.dart';
+import 'package:trust_me/ui/Builder/Drawer.dart';
 
 class Sign extends StatefulWidget {
   @override
@@ -13,11 +12,11 @@ class Sign extends StatefulWidget {
 
 class _SignState extends State<Sign> {
   bool signed = false;
-  final MUST_SIGN_SB = SnackBar(content: Text('Please sign the agreement'));
-  final CHECK_INPUT_SN = SnackBar(
+  static const MUST_SIGN_SB = SnackBar(content: Text('Please sign the agreement'));
+  static const CHECK_INPUT_SN = SnackBar(
       content: Text('You have to fill the recipient email and content'));
-  final SENDING_SB = SnackBar(content: Text('Sending agreement to docusign'));
-  final SENT_SB = SnackBar(content: Text('Sent'));
+  static const SENDING_SB = SnackBar(content: Text('Sending agreement to docusign'));
+  static const SENT_SB = SnackBar(content: Text('Sent'));
   final TextEditingController _recipientController =
       new TextEditingController();
   final TextEditingController _descriptionController =
@@ -160,10 +159,10 @@ class _SignState extends State<Sign> {
     } else {
       Scaffold.of(context).showSnackBar(SENDING_SB);
       var url = "http://la6.scottz.net:8080/createAgreements";
-      debugPrint('Trying to send, my token is ${getToken()}');
+      debugPrint('Trying to send, my token is ${getUserToken()}');
       http.post(url, headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        "x-access-token": getToken()
+        "x-access-token": getUserToken()
       }, body: {
         "receiver": _recipientController.text,
         "agreement": _descriptionController.text

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:trust_me/ui/Account.dart';
-import 'package:trust_me/ui/Agreements.dart';
-import 'package:trust_me/ui/Friends.dart';
-import 'package:trust_me/ui/Sign.dart';
-import 'package:trust_me/ui/WebSign.dart';
+import 'package:trust_me/ui/Page/Account.dart';
+import 'package:trust_me/ui/Page/Agreements.dart';
+import 'package:trust_me/ui/Page/Friends.dart';
+import 'package:trust_me/ui/Page/Sign.dart';
+import 'package:trust_me/ui/Page/WebSign.dart';
 import 'package:trust_me/util/AccountHandle.dart';
-import 'package:trust_me/ui/signature.dart';
-
+import 'package:trust_me/ui/Page/Signature.dart';
+import 'package:trust_me/util/AgreementHandle.dart';
 
 getDrawer(currentBuildContext) => new Drawer(
         child: ListView(
@@ -89,7 +89,7 @@ getDrawer(currentBuildContext) => new Drawer(
             Text("Sign Out")
           ]),
           onTap: () {
-            clearStuff();
+            clearBufferedAgreements();
             Navigator.pushReplacement(currentBuildContext,MaterialPageRoute(builder: (context) => Login()));
           },
 //            MaterialPageRoute(builder: (context) => null)),
